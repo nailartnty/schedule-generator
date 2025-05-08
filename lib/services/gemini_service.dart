@@ -1,7 +1,9 @@
 import 'dart:convert';
-
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
+import 'package:schedule_generator/models/task.dart';
 
 // file ini cara kita berkomunikasi dengan API kita
 
@@ -74,8 +76,7 @@ class GeminiService {
 
       response.statusCode -> status general
 
-      1. Informational responses (100 – 199) -> Ini kayak “halo duluan” dari server. 
-      Artinya server nerima permintaan kamu dan lagi proses, tapi belum selesai.
+      1. Informational responses (100 – 199) -> Artinya server nerima permintaan kamu dan lagi proses, tapi belum selesai.
       2. Successful responses (200 – 299) -> berhasil mendapatkan response
       3. Redirection messages (300 – 399) -> Ini artinya kamu diminta pindah ke alamat lain. 
       Misalnya link udah pindah, jadi server bilang “eh, coba ke sini deh.”
@@ -92,9 +93,28 @@ class GeminiService {
         throw ArgumentError("Server Not Found");
       case 500:
         throw ArgumentError("Internal Server Error");
-      default: 
+      default: // belum ketahuan errornya apa
         throw ArgumentError("Unknown Error : ${response.statusCode}");
     }
   }
 
+  String _buildPrompt(List<Task> tasks) {
+    // berfungsi untuk menyetting format tanggal dan waktu lokal(indonesia) 
+    initializeDateFormatting();
+    final dateFormatter = DateFormat("dd mm yy 'pukul' hh:mm, 'id_ID'");
+    final taskList = tasks.map((task) {
+      final formatDeadline = dateFormatter.format(task.deadline);
+      // ${task.} -> kanpa dia ngarahnya ke import convert?
+      return "Tugas: ${task.name} (Duration: ${task.duration} minutes, Deadline: $formatDeadline)";
+    });
+
+    return "'"
+    // TODO: masukkan Prompt disini
+    $taskList;
+  }
+  void _validateTasks(List<Task> tasks) {
+    // ini merupakan bentuk dari single statement dari if-else condition
+    if (tasks.isEmpty) throw ArgumentError("please input ur task here!?");
+      
+  }
 }
