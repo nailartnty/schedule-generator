@@ -1,6 +1,6 @@
 /*
   file yang berada didlm folder model..
-  bisanya disebut dengan Data Class
+  bisanya disebut dengan Data Class -> data yang mau di convert
 
   biasanya Data Class dipresentasikan dengan bundling..
   dengan menginmport library Parcelize = Android Native (membungkus semua dataClass agar bisa dipanggil dimanapun)

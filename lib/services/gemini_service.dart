@@ -8,7 +8,9 @@ import 'package:schedule_generator/models/task.dart';
 // file ini cara kita berkomunikasi dengan API kita
 
 class GeminiService {
-  // untuk gerbang komunikasi awal antara client(kode project/app yg udah di deploy) sama server(gemini api)
+  // untuk gerbang komunikasi awal antara 
+  // client(kode project/app yg udah di deploy) 
+  // sama server(gemini api)
   static const String _baseUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
 
   final String apiKey;
@@ -107,11 +109,26 @@ class GeminiService {
       // ${task.} -> kanpa dia ngarahnya ke import convert?
       return "Tugas: ${task.name} (Duration: ${task.duration} minutes, Deadline: $formatDeadline)";
     });
+    
+    /* 
+      triple apostrhop(""")
+      menggunakan framework RTA(Role-Task_ Action) untuk prompting
+    */
+    return """
+      saya adalah seorang siswa, dan saya memiliki daftar sebagai berikut:
 
-    return "'"
-    // TODO: masukkan Prompt disini
-    $taskList;
+      $taskList
+
+      Tolong susun jadwal yang optimal dan efisienberdasarkan tugas tersebut.
+      Tolong tentukan prioritasnya berdasarkan *deadline yang paling dekat* dan *durasi tugas*
+      Tolong buat jadwal yang sistematis dari pagi hari, sampai malam hari.
+      Tolong pastikan semua tugas dapat terselesaikan sebelum deadline.
+
+      Tolong buatkan output Jadwal dalam format list per jam, misalnya:
+      - 07:00 - 08:00 Bertemu teman
+    """;
   }
+
   void _validateTasks(List<Task> tasks) {
     // ini merupakan bentuk dari single statement dari if-else condition
     if (tasks.isEmpty) throw ArgumentError("please input ur task here!?");
